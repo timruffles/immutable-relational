@@ -1,0 +1,21 @@
+{
+  "name": "imul-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.32",
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2",
+    "mocha-sugar-free": "^1.3.1",
+    "ts-node": "^1.5.2",
+    "typescript": "^2.0.3"
+  }
+}

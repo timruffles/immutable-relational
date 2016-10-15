@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"strictNullChecks": true,
+		"noImplicitReturns": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+
+		"lib": ["es2015"],
+
+		"sourceMap": true,
+		"moduleResolution": "node",
+		"module": "commonjs",
+		"target": "es6"
+	},
+	"files": [
+	]
+}
+
+
