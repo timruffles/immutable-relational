@@ -4,24 +4,26 @@ It's a pain to update immutable data! This library makes it much easier:
 
 ```javascript
 
-const schema = schema(
-  collection(User,
-    relations(
-      hasOne(Profile),
-      hasMany(Message)
-    )
-  ),
-  collection(Message,
-    relations(
-      belongsTo(User)
-    )
-  ),
-  collection(Profile,
-    relations(
-      belongsTo(User)
-    )
-  ),
-);
+const schema = schema({
+  collections: [
+    collection(User,
+      relations(
+        hasOne(Profile),
+        hasMany(Message)
+      )
+    ),
+    collection(Message,
+      relations(
+        belongsTo(User)
+      )
+    ),
+    collection(Profile,
+      relations(
+        belongsTo(User)
+      )
+    ),
+  ]
+});
 
 schema.insert([])
 
@@ -35,6 +37,11 @@ schema.for(User, 2).get(Profile);
 schema.for(User, 2).getAll(Message);
 
 schema.relate(aUser).to(someProfile)
+```
+
+```typescript
+
+
 
 ```
 
