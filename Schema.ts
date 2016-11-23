@@ -133,12 +133,20 @@ export class Db {
 
   updateAll<A>(table: TableSpec<A>, update: UpdaterOrPatch<A>) {
     this.queue((s) => {
+      const innerUpdate = typeof update === 'function'
+        ? (c: any, v: any, id: any) => c.updateIn([getTableKey(table), id], update)
+        : (c: any, v: any, id: any) => {
+          return c.update(id, (curr: any) => Object.assign({}, curr, update))
+        }
+        ;
+
       // super dumb implementation
-      s.get(getTableKey(table)).forEach((_, id) => {
-        s = s.updateIn([getTableKey(table), id], update as any);
-      });
-      return s;
-    })
+      const tableKey = getTableKey(table);
+      const original = s.get(tableKey)
+      
+      return s.set(tableKey, original.reduce(innerUpdate, original));
+    });
+
     return this;
   }
 
@@ -152,7 +160,7 @@ export class Db {
   deleteWhere<A>(table: TableSpec<A>, pred: (a: A, id: RowId) => any) {
     this.queue((s) => {
       const key = getTableKey(table);
-      return s.set(key, s.get(key).filter(pred) as any);
+      return s.set(key, s.get(key).filterNot(pred) as any);
     });
     return this;
   }

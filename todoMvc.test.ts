@@ -69,7 +69,7 @@ import { expect } from "chai";
 import { describe, it } from "mocha-sugar-free";
 
 
-describe('todos reducer', () => {
+describe.only('todos reducer', () => {
   it('should handle initial state', () => {
     expect(
       prepareState(todos(undefined, {}))
