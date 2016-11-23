@@ -96,7 +96,7 @@ interface SingleOperationOverDb {
   getFor<A,B>(owner: A, table: B): Maybe<B>;
   update<A>(table: A, id: RowId, update: {}): Fallibly<A>;
   delete<A>(table: A, id: RowId): Fallibly<A>;
-  relate<A>(record: A): RelationChain<A>;
+  relate<A>(table: A, record: A): RelationChain<A>;
 }
 
 
