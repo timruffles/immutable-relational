@@ -5,13 +5,15 @@ Redux works really well if you normalize data. There aren't many good patterns f
 For example, relating two records becomes concise and type-safe:
 
 ```typescript
-const user = db.get(User, 10);
-const maybeName = user.map((u) => u.name); // Maybe<string>
-user.name // type error - it's a Maybe<User>, not a user
+const maybeUser = db.get(User, 10); // Maybe<User>
+const maybeName = maybeUser.map((u) => u.name); // Maybe<string>
+maybeUser.name // type error - it's a Maybe<User>, not a user
 
-// operations that could logically fail get types
-const wasRelated = db.relate(User, user)
+// operations that could logically fail get types (e.g is there a missing key?)
+const maybeRelated = maybeUser.map(user => (
+  db.relate(User, user)
     .to(Message, 10); // Fallibly<RelationRecord<User, Message>>
+));
 ```
 
 So common reducer operations that can be quite intricate become a lot simpler, with a `.after` method for operations that need to be sequenced.
