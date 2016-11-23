@@ -1,38 +1,27 @@
 ## Immutable DB
 
-It can be a pain to use Redux with TypeScript, when sticking to immutable data. This library makes it much easier. It's basically a type-safe database for Redux:
-
-```typescript
-interface SingleOperationOverDb {
-  get<A>(table: A, id: RowId): Maybe<A>;
-  all<A>(table: A): A[];
-  for<A>(owner: A): RelationQuery<A>;
-  getFor<A,B>(owner: A, table: B): Maybe<B>;
-  update<A>(table: A, id: RowId, update: {}): Fallibly<A>;
-  delete<A>(table: A, id: RowId): Fallibly<A>;
-  relate<A>(record: A): RelationChain<A>;
-}
-```
+Redux works really well if you normalize data. There aren't many good patterns for handling relational data immutably though. This library makes it much easier. It's a type-safe relational data-structure for Redux: basically syntax-sugar around a bunch of maps.
 
 For example, relating two records becomes concise and type-safe:
 
 ```typescript
 const user = db.get(User, 10);
+const maybeName = user.map((u) => u.name); // Maybe<string>
 user.name // type error - it's a Maybe<User>, not a user
-maybe.map(user, (u) => u.name); // string[]
 
-
+// operations that could logically fail get types
 const wasRelated = db.relate(User, user)
-    .to(Message, 10); // Fallibly<RelationRecord<User,Message>>
+    .to(Message, 10); // Fallibly<RelationRecord<User, Message>>
 ```
 
-So common reducer operations that can be quite intricate become a lot simpler:
+So common reducer operations that can be quite intricate become a lot simpler, with a `.after` method for operations that need to be sequenced.
 
 ```typescript
 function reduceComments(state: CommentDb, action: Action) {
   switch(action.type) {
     case 'commentOnComment':
       const { newState, commented } = state
+        .after
         .insert(Comment, action.commentData); // inserted: Comment
 
       return newState.relate(Comment, commented)
@@ -81,6 +70,7 @@ schema.remove(User, 1); // Fallibly<Deleted>
 schema.getAll(User); // User[]
 schema.for(User, 2).get(Profile); // Maybe<Profile>
 schema.for(User, 2).getAll(Message); // Message[]
+
 ```
 
 ## Anti-goals
